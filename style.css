@@ -1,0 +1,14 @@
+input {
+    font-size: 20pt;
+    border: 1px solid gray;
+    padding: 10px;
+    background-color: lightblue;
+    text-align: center;
+}
+
+button {
+    font-size: 20pt;
+    padding: 20px;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
