@@ -6,9 +6,19 @@ input {
     text-align: center;
 }
 
-button {
+.btnNumber,
+.btnDelete,
+.btnClear {
     font-size: 20pt;
     padding: 20px;
     border: 1px solid gray;
     border-radius: 5px;
+}
+
+.btnDelete {
+    background-color: rgb(255, 220, 220);
+}
+
+.btnClear {
+    background-color: lightblue;
 }
