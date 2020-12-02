@@ -2,6 +2,18 @@ body {
     font-size: 20pt;
 }
 
+#message {
+    border: 1px solid gray;
+    border-radius: 5px;
+    font-size: 17pt;
+    padding: 10px;
+    position: relative;
+    width: auto;
+    height: 25px;
+    margin-top: 10px;
+    background-color: lightgoldenrodyellow;
+}
+
 input {
     font-size: 20pt;
     border: 1px solid gray;

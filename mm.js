@@ -1,5 +1,6 @@
 let phoneNumber = null;
 let inputAmount = null;
+let sysMessage = null;
 
 //=======================================
 let MBOOK = { mb: [] };
@@ -14,6 +15,14 @@ function MBook(phone) {
     this.mBook = []; // for storing Mileages
     this.mTotal = 0; // Total mileage amount
 }
+
+function mBookReport(mb) {
+    let msg = `Phone:[${mb.phone}] `;
+    msg += `적립 횟수:[${mb.mBook.length}]회 `;
+    msg += ` 적립 총액:[${toCommaNumber(mb.mTotal)}]`;
+    return msg;
+}
+
 
 function mBookAddMileage(mb, aMileage) {
     mb.mBook.push(aMileage);
@@ -39,6 +48,9 @@ function findMBook(phone) {
     return newMB;
 }
 //=========================================
+function toCommaNumber(n) {
+    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
 
 function touchNumber() {
     currentInput = this;
@@ -46,8 +58,10 @@ function touchNumber() {
 
 function touchButton() {
     this.blur();
-    if (phoneNumber.value.length >= 13)
+    if (phoneNumber.value.length >= 13) {
+        onoff(".save", "on");
         return;
+    }
     phoneNumber.value += this.value;
     switch (phoneNumber.value.length) {
         case 3:
@@ -55,7 +69,14 @@ function touchButton() {
             phoneNumber.value += "-";
             break;
     }
-    $("#start010").attr("disabled", true);
+    if (phoneNumber.value.length < 13) {
+        onoff(".save", "off");
+        onoff(".btnNumber", "on");
+    } else {
+        onoff(".save", "on");
+        onoff(".btnNumber", "off");
+    }
+    onoff("#start010", "off");
 }
 
 function touchStart010() {
@@ -66,6 +87,8 @@ function touchStart010() {
 }
 
 function touchDelete() {
+    onoff(".btnNumber", "on");
+    onoff(".save", "off");
     let length = phoneNumber.value.length;
     switch (length) {
         case 0:
@@ -76,40 +99,61 @@ function touchDelete() {
             break;
     }
     phoneNumber.value = phoneNumber.value.slice(0, phoneNumber.value.length - 1);
-    if (phoneNumber.value.length <= 0)
-        $("#start010").attr("disabled", false);
+    if (phoneNumber.value.length > 0)
+        onoff("#start010", "off");
+    else
+        onoff("#start010", "on");
 }
 
 function touchClear() {
+    onoff(".btnNumber", "on");
+    onoff(".save, #start010", "off");
     phoneNumber.value = "010-";
-    $("#start010").attr("disabled", true);
 }
 
 function keyDown() {
     alert(event.keyCode);
 }
 
+function onoff(target, value) {
+    value = value.toUpperCase();
+    value = (value == "ON") ? false : true;
+    $(target).attr("disabled", value);
+}
+
 function touchCheck() {
+    clearMessage();
     let nm = Math.random() * 100;
     nm = Math.floor(nm) * 1000;
     //https://mizzo-dev.tistory.com/65 (1000단위 콤마 삽입)
-    inputAmount.value = nm.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    $(this).attr("disabled", true);
-    $(".save").attr("disabled", false);
+    inputAmount.value = toCommaNumber(nm);
+    onoff(".btnNumber, .btnDelete, .btnClear", "on");
+    onoff(".amount, .save, #start010", "off");
+    putMessage("적립할 휴대폰 번호를 입력해 주세요.");
 }
 
 function touchInput() {
-    alert(this.value.replace(/,/g, ""));
+    this.blur();
 }
 
 function touchSave() {
     let fmb = findMBook(phoneNumber.value);
     mBookAddMileage(fmb, new Mileage(inputAmount.value.replace(/,/g, "")));
+    putMessage(mBookReport(fmb));
 
-    $(".amount").attr("disabled", false);
-    $("#amount").val("저장되었습니다.");
+
+    onoff(".amount", "on");
     $(".btnClear").click();
-    $(this).attr("disabled", true);
+    onoff(".save, .btnNumber, .btnDelete, .btnClear", "off");
+    $("#amount").val("저장되었습니다.");
+}
+
+function putMessage(msg) {
+    sysMessage.innerHTML = msg;
+}
+
+function clearMessage() {
+    sysMessage.innerHTML = " ";
 }
 window.onload = function() {
     let strMBOOK = localStorage.getItem("MBOOK");
@@ -121,19 +165,23 @@ window.onload = function() {
 
     phoneNumber = document.getElementById("phoneNumber");
     inputAmount = document.getElementById("amount");
+    sysMessage = document.getElementById("message");
+
     $(phoneNumber).focus(function() { $(phoneNumber).blur() });
-    $("input").click(touchNumber);
+    $(inputAmount).focus(function() { this.blur() });
+
     $(".btnNumber").click(touchButton);
     $(".btnDelete").click(touchDelete);
     $(".btnClear").click(touchClear);
     $("#start010").click(touchStart010);
     $(".amount").click(touchCheck);
     $("#amount").click(touchInput);
-    $("#start010").click();
     $(".save").click(touchSave);
-    $(".save").attr("disabled", true);
 
-    // $(document).keydown(keyDown);
+    $("#start010").click();
+
+    $(".save, .btnNumber, .btnDelete, .btnClear", "off");
+
 };
 window.onunload = function() {
     let strMBOOK = JSON.stringify(MBOOK);
