@@ -83,6 +83,7 @@ window.onload = function() {
     $("#amount").click(touchInput);
     $("#start010").click();
     $(".save").click(touchSave);
+    $(".save").attr("disabled", true);
 
     // $(document).keydown(keyDown);
 };
