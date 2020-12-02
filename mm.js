@@ -16,6 +16,14 @@ function touchButton() {
             phoneNumber.value += "-";
             break;
     }
+    $("#start010").attr("disabled", true);
+}
+
+function touchStart010() {
+    if (phoneNumber.value.length <= 0) {
+        phoneNumber.value = this.value + "-";
+        this.disabled = true;
+    }
 }
 
 function touchDelete() {
@@ -29,10 +37,13 @@ function touchDelete() {
             break;
     }
     phoneNumber.value = phoneNumber.value.slice(0, phoneNumber.value.length - 1);
+    if (phoneNumber.value.length <= 0)
+        $("#start010").attr("disabled", false);
 }
 
 function touchClear() {
     phoneNumber.value = "";
+    $("#start010").attr("disabled", false);
 }
 
 function keyDown() {
@@ -46,5 +57,6 @@ window.onload = function() {
     $(".btnNumber").click(touchButton);
     $(".btnDelete").click(touchDelete);
     $(".btnClear").click(touchClear);
+    $("#start010").click(touchStart010);
     // $(document).keydown(keyDown);
 };
