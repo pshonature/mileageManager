@@ -1,3 +1,7 @@
+body {
+    font-size: 20pt;
+}
+
 input {
     font-size: 20pt;
     border: 1px solid gray;
@@ -6,9 +10,23 @@ input {
     text-align: center;
 }
 
-.btnNumber,
+#amount {
+    text-align: right;
+}
+
+#phoneNumber {
+    font-size: 30pt;
+    border-radius: 7pt;
+    background-color: lightsalmon;
+    text-align: left;
+}
+
+
+/* .btnNumber,
 .btnDelete,
-.btnClear {
+.btnClear  */
+
+button {
     font-size: 20pt;
     padding: 20px;
     border: 1px solid gray;
@@ -21,4 +39,15 @@ input {
 
 .btnClear {
     background-color: lightblue;
+}
+
+.amount {
+    font-size: 15pt;
+    padding: 15px;
+}
+
+.save {
+    font-size: 20pt;
+    padding: 17px;
+    margin-top: 0px;
 }
