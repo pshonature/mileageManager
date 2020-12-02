@@ -14,11 +14,12 @@ function MBook(phone) {
     this.mBook = []; // for storing Mileages
     this.mTotal = 0; // Total mileage amount
 }
-MBook.prototype.push = function(aMileage) {
-        this.mBook.push(aMileage);
-        this.mTotal += aMileage.amount;
-    }
-    //---------------------------------------
+
+function mBookAddMileage(mb, aMileage) {
+    mb.mBook.push(aMileage);
+    mb.mTotal += aMileage.amount;
+}
+//---------------------------------------
 
 //=======================================
 function getMileage() {
@@ -103,7 +104,7 @@ function touchInput() {
 
 function touchSave() {
     let fmb = findMBook(phoneNumber.value);
-    fmb.push(new Mileage(inputAmount.value.replace(/,/g, "")));
+    mBookAddMileage(fmb, new Mileage(inputAmount.value.replace(/,/g, "")));
 
     $(".amount").attr("disabled", false);
     $("#amount").val("저장되었습니다.");
