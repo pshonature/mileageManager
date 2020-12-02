@@ -1,6 +1,43 @@
 let phoneNumber = null;
 let inputAmount = null;
 
+//=======================================
+let MBOOK = { mb: [] };
+//=======================================
+function Mileage(amount) {
+    this.amount = parseInt(amount);
+    this.date = new Date();
+}
+//---------------------------------------
+function MBook(phone) {
+    this.phone = phone;
+    this.mBook = []; // for storing Mileages
+    this.mTotal = 0; // Total mileage amount
+}
+MBook.prototype.push = function(aMileage) {
+        this.mBook.push(aMileage);
+        this.mTotal += aMileage.amount;
+    }
+    //---------------------------------------
+
+//=======================================
+function getMileage() {
+    let am = new Mileage(inputAmount.value.replace(/,/g, ""));
+    return am;
+}
+//-----------------------------
+// findMBook: MBOOK에서 휴대폰 번호와 일치하는 MBook을 찾는다. 
+//  없으면 새 MBook 생성 저장 후 반환
+function findMBook(phone) {
+    for (let amb of MBOOK.mb) {
+        if (amb.phone === phone)
+            return amb;
+    }
+    let newMB = new MBook(phone);
+    MBOOK.mb.push(newMB);
+    return newMB;
+}
+//=========================================
 
 function touchNumber() {
     currentInput = this;
@@ -65,12 +102,22 @@ function touchInput() {
 }
 
 function touchSave() {
+    let fmb = findMBook(phoneNumber.value);
+    fmb.push(new Mileage(inputAmount.value.replace(/,/g, "")));
+
     $(".amount").attr("disabled", false);
     $("#amount").val("저장되었습니다.");
     $(".btnClear").click();
     $(this).attr("disabled", true);
 }
 window.onload = function() {
+    let strMBOOK = localStorage.getItem("MBOOK");
+    if (strMBOOK == null) {
+        MBOOK = { mb: [] };
+    } else {
+        MBOOK = JSON.parse(strMBOOK);
+    }
+
     phoneNumber = document.getElementById("phoneNumber");
     inputAmount = document.getElementById("amount");
     $(phoneNumber).focus(function() { $(phoneNumber).blur() });
@@ -87,3 +134,7 @@ window.onload = function() {
 
     // $(document).keydown(keyDown);
 };
+window.onunload = function() {
+    let strMBOOK = JSON.stringify(MBOOK);
+    localStorage.setItem("MBOOK", strMBOOK);
+}
