@@ -180,7 +180,7 @@ window.onload = function() {
 
     $("#start010").click();
 
-    $(".save, .btnNumber, .btnDelete, .btnClear", "off");
+    onoff(".save, .btnNumber, .btnDelete, .btnClear", "off");
 
 };
 window.onunload = function() {
