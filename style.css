@@ -29,8 +29,11 @@ input {
 #phoneNumber {
     font-size: 30pt;
     border-radius: 7pt;
-    background-color: lightsalmon;
+    background-color: rgb(172, 226, 155);
     text-align: left;
+    font-family: "Courier New";
+    font-weight: bolder;
+    text-shadow: 3px 3px 3px rgb(58, 243, 12);
 }
 
 
