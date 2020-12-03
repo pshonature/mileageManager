@@ -12,13 +12,33 @@
 
 <body>
     <h1>Mileage Manager</h1>
-    <hr> Amount: <input type="text" size="20" id="amount">
-    <button class="amount">Check</button>
     <div id="message"></div>
-
-    <hr> Phone Number:<input type="text" class="pnumber" size="13" id="phoneNumber">
-    <button class="save">Save</button>
-    <button class="cancel">Cancel</button>
+    <hr>
+    <table>
+        <tr>
+            <td class="inputCaption">
+                Amount:
+            </td>
+            <td class="inputField">
+                <input type="text" size="20" id="amount">
+            </td>
+            <td class="functionButton">
+                <button class="amount">Check</button>
+            </td>
+        </tr>
+        <tr>
+            <td class="inputCaption">
+                Phone Number:
+            </td>
+            <td class="inputField">
+                <input type="text" class="pnumber" size="13" id="phoneNumber">
+            </td>
+            <td class="functionButton">
+                <button class="save">Save</button>
+                <button class="cancel">Cancel</button>
+            </td>
+        </tr>
+    </table>
     <hr>
     <button id="start010" class="btnNumber" value="010">010</button>
     <button class="btnNumber" value="0">0</button>

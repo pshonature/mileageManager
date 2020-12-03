@@ -69,3 +69,12 @@ button {
 .cancel {
     background-color: lightpink;
 }
+
+td {
+    padding: 5px;
+}
+
+.inputCaption {
+    text-align: right;
+    width: 200px;
+}

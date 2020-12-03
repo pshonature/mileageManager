@@ -149,7 +149,7 @@ function touchSave() {
 
     onoff(".amount", "on");
     $(".btnClear").click();
-    onoff(".save, .btnNumber, .btnDelete, .btnClear", "off");
+    onoff(".save, .cancel, .btnNumber, .btnDelete, .btnClear", "off");
     $("#amount").val("저장되었습니다.");
 
     setTimeout(afterSaving, 5000);
