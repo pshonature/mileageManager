@@ -136,6 +136,11 @@ function touchInput() {
     this.blur();
 }
 
+function afterSaving() {
+    $("#amount").val("적립할 금액 확인 =>");
+    putMessage("적립할 금액을 먼저 확인[Check] 해주세요.");
+}
+
 function touchSave() {
     let fmb = findMBook(phoneNumber.value);
     mBookAddMileage(fmb, new Mileage(inputAmount.value.replace(/,/g, "")));
@@ -146,6 +151,8 @@ function touchSave() {
     $(".btnClear").click();
     onoff(".save, .btnNumber, .btnDelete, .btnClear", "off");
     $("#amount").val("저장되었습니다.");
+
+    setTimeout(afterSaving, 5000);
 }
 
 function putMessage(msg) {
@@ -181,6 +188,8 @@ window.onload = function() {
     $("#start010").click();
 
     onoff(".save, .btnNumber, .btnDelete, .btnClear", "off");
+    putMessage("적립할 금액을 먼저 확인[Check] 해주세요.");
+    $("#amount").val("적립할 금액 확인 =>");
 
 };
 window.onunload = function() {

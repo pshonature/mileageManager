@@ -27,9 +27,10 @@ input {
 }
 
 #phoneNumber {
+    background-color: navy;
+    color: yellowgreen;
     font-size: 30pt;
     border-radius: 7pt;
-    background-color: lightsalmon;
     text-align: left;
 }
 
