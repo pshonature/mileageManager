@@ -146,9 +146,6 @@ function touchSave() {
     $(".btnClear").click();
     onoff(".save, .btnNumber, .btnDelete, .btnClear", "off");
     $("#amount").val("저장되었습니다.");
-    setTimeout(function() {
-        putMessage("적립할 금액을 [check]하여 주세요.");
-    }, 5000);
 }
 
 function putMessage(msg) {
@@ -184,7 +181,6 @@ window.onload = function() {
     $("#start010").click();
 
     onoff(".save, .btnNumber, .btnDelete, .btnClear", "off");
-    putMessage("적립할 금액을 [check]하여 주세요.");
 
 };
 window.onunload = function() {
