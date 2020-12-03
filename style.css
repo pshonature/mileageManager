@@ -59,8 +59,13 @@ button {
     padding: 15px;
 }
 
-.save {
+.save,
+.cancel {
     font-size: 20pt;
     padding: 17px;
     margin-top: 0px;
+}
+
+.cancel {
+    background-color: lightpink;
 }

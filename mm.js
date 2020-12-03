@@ -127,7 +127,7 @@ function touchCheck() {
     nm = Math.floor(nm) * 1000;
     //https://mizzo-dev.tistory.com/65 (1000단위 콤마 삽입)
     inputAmount.value = toCommaNumber(nm);
-    onoff(".btnNumber, .btnDelete, .btnClear", "on");
+    onoff(".btnNumber, .btnDelete, .btnClear, .cancel", "on");
     onoff(".amount, .save, #start010", "off");
     putMessage("적립할 휴대폰 번호를 입력해 주세요.");
 }
@@ -153,6 +153,20 @@ function touchSave() {
     $("#amount").val("저장되었습니다.");
 
     setTimeout(afterSaving, 5000);
+}
+
+function touchCancel() {
+    putMessage("적립을 취소하였습니다.");
+    onoff(".cancel", "off");
+    $(phoneNumber).val("");
+    setTimeout(function() {
+        afterSaving();
+        $("#amount").val("적립할 금액 확인 =>");
+        putMessage("적립할 금액을 먼저 확인[Check] 해주세요.");
+        $("#start010").click();
+        onoff(".save, .cancel, .btnNumber, .btnDelete, .btnClear", "off");
+        onoff(".amount", "on");
+    }, 3000);
 }
 
 function putMessage(msg) {
@@ -184,10 +198,11 @@ window.onload = function() {
     $(".amount").click(touchCheck);
     $("#amount").click(touchInput);
     $(".save").click(touchSave);
+    $(".cancel").click(touchCancel);
 
     $("#start010").click();
 
-    onoff(".save, .btnNumber, .btnDelete, .btnClear", "off");
+    onoff(".save, .cancel, .btnNumber, .btnDelete, .btnClear", "off");
     putMessage("적립할 금액을 먼저 확인[Check] 해주세요.");
     $("#amount").val("적립할 금액 확인 =>");
 
