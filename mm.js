@@ -139,6 +139,7 @@ function touchInput() {
 function afterSaving() {
     $("#amount").val("적립할 금액 확인 =>");
     putMessage("적립할 금액을 먼저 확인[Check] 해주세요.");
+    onoff(".amount", "on");
 }
 
 function touchSave() {
@@ -147,9 +148,8 @@ function touchSave() {
     putMessage(mBookReport(fmb));
 
 
-    onoff(".amount", "on");
     $(".btnClear").click();
-    onoff(".save, .cancel, .btnNumber, .btnDelete, .btnClear", "off");
+    onoff(".save, .amount, .cancel, .btnNumber, .btnDelete, .btnClear", "off");
     $("#amount").val("저장되었습니다.");
 
     setTimeout(afterSaving, 5000);
@@ -176,13 +176,36 @@ function putMessage(msg) {
 function clearMessage() {
     sysMessage.innerHTML = " ";
 }
-window.onload = function() {
+
+function initMBOOK() {
+    MBOOK = { mb: [] };
+    saveMBOOK();
+}
+
+function initMBOOKByFooterClick() {
+    let ans = confirm("지금까지 저장된 마일리지 정보를 완전히 삭제할까요?");
+    if (ans) {
+        initMBOOK();
+        location.reload();
+    }
+}
+
+function readMBOOK() {
     let strMBOOK = localStorage.getItem("MBOOK");
     if (strMBOOK == null) {
-        MBOOK = { mb: [] };
+        initMBOOK();
     } else {
         MBOOK = JSON.parse(strMBOOK);
     }
+}
+
+function saveMBOOK() {
+    let strMBOOK = JSON.stringify(MBOOK);
+    localStorage.setItem("MBOOK", strMBOOK);
+}
+
+window.onload = function() {
+    readMBOOK();
 
     phoneNumber = document.getElementById("phoneNumber");
     inputAmount = document.getElementById("amount");
@@ -199,6 +222,7 @@ window.onload = function() {
     $("#amount").click(touchInput);
     $(".save").click(touchSave);
     $(".cancel").click(touchCancel);
+    // $(".footer").click(initMBOOKByFooterClick);
 
     $("#start010").click();
 
@@ -207,7 +231,4 @@ window.onload = function() {
     $("#amount").val("적립할 금액 확인 =>");
 
 };
-window.onunload = function() {
-    let strMBOOK = JSON.stringify(MBOOK);
-    localStorage.setItem("MBOOK", strMBOOK);
-}
+window.onunload = saveMBOOK;
