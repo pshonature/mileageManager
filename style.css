@@ -41,16 +41,6 @@ input {
     letter-spacing: 6px;
 }
 
-.lightOnPhoneNumber {
-    background-color: royalblue;
-    color: yellow;
-}
-
-
-/* .btnNumber,
-.btnDelete,
-.btnClear  */
-
 button {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     font-size: 20pt;

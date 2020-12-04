@@ -135,10 +135,6 @@ function touchClear() {
     putMessage("적립할 휴대폰 번호를 입력해 주세요.");
 }
 
-function keyDown() {
-    alert(event.keyCode);
-}
-
 function onoffBakup(target, value) {
     value = value.toUpperCase();
     value = (value == "ON") ? false : true;
@@ -174,7 +170,7 @@ function touchInput() {
 
 function afterSaving() {
     $("#amount").val("적립할 금액 확인 =>");
-    putMessage("적립할 금액을 먼저 확인[Check] 해주세요.");
+    putMessage("적립할 금액을 먼저 확인[V] 해주세요.");
     onoff(".amount", "on");
     onoff(".btnNumber, .save, .cancel, .btnDelete, .btnClear", "off");
     phoneNumber.value = "";
@@ -201,7 +197,7 @@ function touchCancel() {
     setTimeout(function() {
         afterSaving();
         $("#amount").val("적립할 금액 확인 =>");
-        putMessage("적립할 금액을 먼저 확인[Check] 해주세요.");
+        putMessage("적립할 금액을 먼저 확인[V] 해주세요.");
         phoneNumber.value = "010-";
         onoff(".amount", "on");
     }, 3000);
@@ -266,7 +262,7 @@ window.onload = function() {
     $("#start010").click();
 
     onoff(".save, .cancel, .btnNumber, .btnDelete, .btnClear", "off");
-    putMessage("적립할 금액을 먼저 확인[Check] 해주세요.");
+    putMessage("적립할 금액을 먼저 확인[V] 해주세요.");
     $("#amount").val("적립할 금액 확인 =>");
 
 };

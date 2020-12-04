@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mileage Manager</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="mm.js"></script>
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
     <script src="jquery-3.5.1.min.js"></script>
 </head>
 
@@ -17,25 +19,25 @@
     <table>
         <tr>
             <td class="inputCaption">
-                금액:
+                <i class='fas fa-won-sign' style='font-size:24px'></i>:
             </td>
             <td class="inputField">
                 <input type="text" size="20" id="amount">
             </td>
             <td class="functionButton">
-                <button class="amount">Check</button>
-                <button class="cancel">Cancel</button>
+                <button class="amount"><i class='fas fa-check' style='font-size:24px'></i></button>
+                <button class="cancel"><i class="material-icons" style="font-size:28px;color:red">cancel</i></button>
             </td>
         </tr>
         <tr>
             <td class="inputCaption">
-                번호:
+                <i class='fas fa-phone'></i>:
             </td>
             <td class="inputField">
                 <input type="text" class="pnumber" size="13" id="phoneNumber">
             </td>
             <td class="functionButton">
-                <button class="save">Save</button><br>
+                <button class="save"><i class="material-icons" style="font-size:28px">save</i></button><br>
             </td>
         </tr>
         <tr>
