@@ -36,9 +36,9 @@ function getMileage() {
     return am;
 }
 //-----------------------------
-// findMBook: MBOOK에서 휴대폰 번호와 일치하는 MBook을 찾는다. 
+// findOrNewMBook: MBOOK에서 휴대폰 번호와 일치하는 MBook을 찾는다. 
 //  없으면 새 MBook 생성 저장 후 반환
-function findMBook(phone) {
+function findOrNewMBook(phone) {
     for (let amb of MBOOK.mb) {
         if (amb.phone === phone)
             return amb;
@@ -143,7 +143,7 @@ function afterSaving() {
 }
 
 function touchSave() {
-    let fmb = findMBook(phoneNumber.value);
+    let fmb = findOrNewMBook(phoneNumber.value);
     mBookAddMileage(fmb, new Mileage(inputAmount.value.replace(/,/g, "")));
     putMessage(mBookReport(fmb));
 
@@ -222,7 +222,7 @@ window.onload = function() {
     $("#amount").click(touchInput);
     $(".save").click(touchSave);
     $(".cancel").click(touchCancel);
-    // $(".footer").click(initMBOOKByFooterClick);
+    $(".footer").click(initMBOOKByFooterClick);
 
     $("#start010").click();
 
