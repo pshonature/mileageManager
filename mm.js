@@ -59,10 +59,6 @@ function toCommaNumber(n) {
     return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-function touchNumber() {
-    currentInput = this;
-}
-
 function precheckCurrentPhone() {
     let mb = searchMBook(phoneNumber.value);
     if (mb) { //적립 이력이 있는 번호
@@ -70,6 +66,14 @@ function precheckCurrentPhone() {
     } else {
         putMessage("첫 거래 감사합니다. 단골 고객이 되어주세요 ^^.");
     }
+}
+
+function btnNumberDown() {
+    $(this).addClass("btnNumberDown")
+}
+
+function btnNumberUp() {
+    $(this).removeClass("btnNumberDown")
 }
 
 function touchButton() {
@@ -238,6 +242,7 @@ window.onload = function() {
     $(inputAmount).focus(function() { this.blur() });
 
     $(".btnNumber").click(touchButton);
+    $(".btnNumber").mousedown(btnNumberDown).mouseup(btnNumberUp);
     $(".btnDelete").click(touchDelete);
     $(".btnClear").click(touchClear);
     $("#start010").click(touchStart010);
