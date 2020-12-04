@@ -139,10 +139,20 @@ function keyDown() {
     alert(event.keyCode);
 }
 
-function onoff(target, value) {
+function onoffBakup(target, value) {
     value = value.toUpperCase();
     value = (value == "ON") ? false : true;
     $(target).attr("disabled", value);
+}
+
+function onoff(target, value) {
+    value = value.toUpperCase();
+    value = (value == "ON") ? false : true;
+    if (value) {
+        $(target).hide();
+    } else {
+        $(target).show();
+    }
 }
 
 function touchCheck() {
@@ -154,7 +164,8 @@ function touchCheck() {
     onoff(".btnNumber, .btnDelete, .btnClear, .cancel", "on");
     onoff(".amount, .save, #start010", "off");
     putMessage("적립할 휴대폰 번호를 입력해 주세요.");
-    $(".btnClear").click();
+    // $(".btnClear").click();
+    phoneNumber.value = "010-";
 }
 
 function touchInput() {
@@ -179,7 +190,7 @@ function touchSave() {
     onoff(".save, .amount, .cancel, .btnNumber, .btnDelete, .btnClear", "off");
     $("#amount").val("저장되었습니다.");
 
-    setTimeout(afterSaving, 5000);
+    setTimeout(afterSaving, 3000);
 }
 
 function touchCancel() {

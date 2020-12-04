@@ -25,17 +25,25 @@ input {
 
 #amount {
     text-align: right;
+    padding: 10px;
     border-radius: 5px;
     width: 100%;
 }
 
-#phoneNumber {
+#phoneNumber,
+.pnumber {
     background-color: navy;
     color: rgb(228, 206, 15);
-    font-size: 30pt;
+    font-size: 25pt;
     border-radius: 7pt;
     text-align: left;
     width: 100%;
+    letter-spacing: 6px;
+}
+
+.lightOnPhoneNumber {
+    background-color: royalblue;
+    color: yellow;
 }
 
 
@@ -76,14 +84,18 @@ button {
 
 .save,
 .cancel {
-    font-size: 20pt;
-    padding: 17px;
+    /* font-size: 20pt; */
+    /* padding: 15px; */
     margin-top: 0px;
     margin-left: 20px;
 }
 
 .cancel {
     background-color: lightpink;
+}
+
+.save {
+    background-color: darkorange;
 }
 
 td {
