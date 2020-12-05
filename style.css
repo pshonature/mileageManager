@@ -109,3 +109,57 @@ td {
     font-size: 8pt;
     color: gray;
 }
+
+#mlogzone {
+    border: 1px solid gray;
+    background-color: antiquewhite;
+    width: 300px;
+    height: 300px;
+    padding: 7px;
+    position: absolute;
+    left: 510px;
+    top: 247px;
+    /* padding-top: 0px; */
+}
+
+#mileageLog {
+    border: 1px solid gray;
+    background-color: beige;
+    height: 278px;
+    width: 298px;
+    overflow: scroll;
+    font-size: 15pt;
+}
+
+.mlgNumber,
+.mlgAmount,
+.mlgDate {
+    /* border: 1px solid gray; */
+    /* background-color: lightgray; */
+    font-size: 10pt;
+    float: left;
+    margin-bottom: 0px;
+    font-family: 'Courier New', Courier, monospace;
+    /* line-height:  */
+}
+
+.mlgAmount {
+    width: 75px;
+    text-align: right;
+    font-size: 12pt;
+    color: darkblue;
+    font-weight: bold;
+}
+
+.mlgDate {
+    width: 150px;
+    float: right;
+    color: gray;
+}
+
+.mlgNumber {
+    width: 30px;
+    text-align: right;
+    padding-right: 3px;
+    color: gray;
+}

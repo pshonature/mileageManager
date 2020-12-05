@@ -23,9 +23,27 @@ function mBookReport(mb) {
     return msg;
 }
 
+function mileageToken(m, tag) {
+    let token = `<${tag} class="mlgAmount">${toCommaNumber(m.amount)}</${tag}> `;
+    token += `<${tag} class="mlgDate">${toMyDateForm(m.date)}</${tag}> `;
+    return token;
+}
+
+function mileageTokenList(mlist, checkTop = false) {
+    let list = "";
+    let count = 1;
+    let topClass = (checkTop) ? "background-color: lightpink;" : "";
+    for (let m of mlist) {
+        list += `<div style='${topClass} padding-top: 3px; border-bottom: 1px dotted gray;'>`;
+        list += `<div class="mlgNumber">${count++}:</div> ` + mileageToken(m, "div") + "<br>";
+        list += "</div>";
+        topClass = "";
+    }
+    return list;
+}
 
 function mBookAddMileage(mb, aMileage) {
-    mb.mBook.push(aMileage);
+    mb.mBook.unshift(aMileage);
     mb.mTotal += aMileage.amount;
 }
 //---------------------------------------
@@ -59,12 +77,35 @@ function toCommaNumber(n) {
     return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-function precheckCurrentPhone() {
+function putZero(number, digitSize = 2) {
+    let ns = number.toString();
+    if (ns.length < digitSize)
+        while (ns.length < digitSize)
+            ns = "0" + ns;
+    return ns;
+}
+
+function toMyDateForm(date) {
+    let dstr = date.getFullYear() + "-" + putZero(date.getMonth() + 1) + "-";
+    dstr += putZero(date.getDate()) + " ";
+    dstr += putZero(date.getHours()) + ":";
+    dstr += putZero(date.getMinutes());
+    return dstr;
+}
+
+function precheckCurrentPhone(checkTop = false) {
     let mb = searchMBook(phoneNumber.value);
     if (mb) { //적립 이력이 있는 번호
         putMessage(mBookReport(mb));
+        $("#mLogCount").html(mb.mBook.length);
+        $("#mLogTotal").html(toCommaNumber(mb.mTotal));
+        $("#mileageLog").html(mileageTokenList(mb.mBook, checkTop));
+        $("#mileageLog").slideDown();
     } else {
         putMessage("첫 거래 감사합니다. 단골 고객이 되어주세요 ^^.");
+        $("#mileageLog").html("");
+        $("#mLogCount").html("-");
+        $("#mLogTotal").html("-");
     }
 }
 
@@ -95,7 +136,7 @@ function touchButton() {
         putMessage("적립할 휴대폰 번호를 입력해 주세요");
     } else {
         precheckCurrentPhone();
-        onoff(".save", "on");
+        onoffFade(".save", "on");
         onoff(".btnNumber", "off");
     }
     onoff("#start010", "off");
@@ -109,7 +150,9 @@ function touchStart010() {
 }
 
 function touchDelete() {
+    $("#mileageLog").slideUp();
     putMessage("적립할 휴대폰 번호를 입력해 주세요");
+    $("#mileageLog").html("");
     onoff(".btnNumber", "on");
     onoff(".save", "off");
     let length = phoneNumber.value.length;
@@ -129,6 +172,7 @@ function touchDelete() {
 }
 
 function touchClear() {
+    $("#mileageLog").slideUp();
     onoff(".btnNumber", "on");
     onoff(".save, #start010", "off");
     phoneNumber.value = "010-";
@@ -151,6 +195,16 @@ function onoff(target, value) {
     }
 }
 
+function onoffFade(target, value) {
+    value = value.toUpperCase();
+    value = (value == "ON") ? false : true;
+    if (value) {
+        $(target).fadeOut(1000);
+    } else {
+        $(target).fadeIn(1000);
+    }
+}
+
 function touchCheck() {
     clearMessage();
     let nm = Math.random() * 100;
@@ -162,6 +216,7 @@ function touchCheck() {
     putMessage("적립할 휴대폰 번호를 입력해 주세요.");
     // $(".btnClear").click();
     phoneNumber.value = "010-";
+    $("#mlogzone").slideDown();
 }
 
 function touchInput() {
@@ -172,18 +227,27 @@ function afterSaving() {
     $("#amount").val("적립할 금액 확인 =>");
     putMessage("적립할 금액을 먼저 확인[V] 해주세요.");
     onoff(".amount", "on");
-    onoff(".btnNumber, .save, .cancel, .btnDelete, .btnClear", "off");
+    onoff(".btnNumber, .btnDelete, .btnClear", "off");
+    onoffFade(".save, .cancel", "off");
     phoneNumber.value = "";
+    $("#mileageLog").html("");
+    $("#mLogCount").html("-");
+    $("#mLogTotal").html("-");
+    $("#mileageLog").slideUp();
+    $("#mlogzone").slideUp();
+
 }
 
 function touchSave() {
     let fmb = findOrNewMBook(phoneNumber.value);
     mBookAddMileage(fmb, new Mileage(inputAmount.value.replace(/,/g, "")));
     putMessage(mBookReport(fmb));
+    precheckCurrentPhone(true);
 
 
     // $(".btnClear").click();
-    onoff(".save, .amount, .cancel, .btnNumber, .btnDelete, .btnClear", "off");
+    onoffFade(".save, .cancel", "off");
+    onoff(".amount, .btnNumber, .btnDelete, .btnClear", "off");
     $("#amount").val("저장되었습니다.");
 
     setTimeout(afterSaving, 3000);
@@ -216,6 +280,16 @@ function initMBOOK() {
     saveMBOOK();
 }
 
+function refreshMBOOK() {
+    for (let mb of MBOOK.mb) {
+        mb.mTotal *= 1;
+        for (let m of mb.mBook) {
+            m.amount *= 1;
+            m.date = new Date(m.date);
+        }
+    }
+}
+
 function initMBOOKByFooterClick() {
     let ans = confirm("지금까지 저장된 마일리지 정보를 완전히 삭제할까요?");
     if (ans) {
@@ -230,6 +304,7 @@ function readMBOOK() {
         initMBOOK();
     } else {
         MBOOK = JSON.parse(strMBOOK);
+        refreshMBOOK();
     }
 }
 
@@ -264,6 +339,8 @@ window.onload = function() {
     onoff(".save, .cancel, .btnNumber, .btnDelete, .btnClear", "off");
     putMessage("적립할 금액을 먼저 확인[V] 해주세요.");
     $("#amount").val("적립할 금액 확인 =>");
+    $("#mileageLog").hide();
+    $("#mlogzone").hide();
 
 };
 window.onunload = saveMBOOK;
