@@ -103,9 +103,7 @@ function precheckCurrentPhone(checkTop = false) {
         $("#mileageLog").slideDown();
     } else {
         putMessage("첫 거래 감사합니다. 단골 고객이 되어주세요 ^^.");
-        $("#mileageLog").html("");
-        $("#mLogCount").html("-");
-        $("#mLogTotal").html("-");
+        mlgLogClear();
     }
 }
 
@@ -150,6 +148,7 @@ function touchStart010() {
 }
 
 function touchDelete() {
+    mlgLogClear();
     $("#mileageLog").slideUp();
     putMessage("적립할 휴대폰 번호를 입력해 주세요");
     $("#mileageLog").html("");
@@ -171,7 +170,14 @@ function touchDelete() {
         onoff("#start010", "on");
 }
 
+function mlgLogClear() {
+    $("#mileageLog").html("");
+    $("#mLogCount").html("-");
+    $("#mLogTotal").html("-");
+}
+
 function touchClear() {
+    mlgLogClear();
     $("#mileageLog").slideUp();
     onoff(".btnNumber", "on");
     onoff(".save, #start010", "off");
@@ -230,9 +236,7 @@ function afterSaving() {
     onoff(".btnNumber, .btnDelete, .btnClear", "off");
     onoffFade(".save, .cancel", "off");
     phoneNumber.value = "";
-    $("#mileageLog").html("");
-    $("#mLogCount").html("-");
-    $("#mLogTotal").html("-");
+    mlgLogClear();
     $("#mileageLog").slideUp();
     $("#mlogzone").slideUp();
 
@@ -258,6 +262,11 @@ function touchCancel() {
     onoff(".cancel", "off");
     $(phoneNumber).val("");
     onoff(".save, .cancel, .btnNumber, .btnDelete, .btnClear", "off");
+
+    mlgLogClear();
+    $("#mileageLog").slideUp();
+    $("#mlogzone").slideUp();
+
     setTimeout(function() {
         afterSaving();
         $("#amount").val("적립할 금액 확인 =>");
@@ -324,7 +333,7 @@ window.onload = function() {
     $(inputAmount).focus(function() { this.blur() });
 
     $(".btnNumber").click(touchButton);
-    $(".btnNumber").mousedown(btnNumberDown).mouseup(btnNumberUp);
+    // $(".btnNumber").mousedown(btnNumberDown).mouseup(btnNumberUp);
     $(".btnDelete").click(touchDelete);
     $(".btnClear").click(touchClear);
     $("#start010").click(touchStart010);
@@ -339,6 +348,7 @@ window.onload = function() {
     onoff(".save, .cancel, .btnNumber, .btnDelete, .btnClear", "off");
     putMessage("적립할 금액을 먼저 확인[V] 해주세요.");
     $("#amount").val("적립할 금액 확인 =>");
+    mlgLogClear();
     $("#mileageLog").hide();
     $("#mlogzone").hide();
 

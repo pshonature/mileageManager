@@ -7,7 +7,6 @@ body {
     border-radius: 5px;
     font-size: 17pt;
     padding: 10px;
-    padding-bottom: 15px;
     position: relative;
     width: auto;
     height: 25px;
@@ -21,11 +20,14 @@ input {
     padding: 10px;
     background-color: lightblue;
     text-align: center;
+    box-shadow: 5px 5px 5px gray;
 }
 
 #amount {
     text-align: right;
     padding: 10px;
+    padding-top: 13px;
+    padding-bottom: 13px;
     border-radius: 5px;
     width: 100%;
 }
@@ -50,7 +52,20 @@ button {
     border: 1px solid gray;
     border-radius: 5px;
     position: relative;
+    box-shadow: 5px 5px 5px gray;
+    margin-bottom: 5px;
     /* float: right; */
+}
+
+button:hover {
+    border-color: red;
+    background-color: lemonchiffon;
+    color: blue;
+}
+
+button:active {
+    box-shadow: 2px 2px 2px gray;
+    transform: translateY(3px);
 }
 
 .btnNumberDown {
@@ -119,6 +134,7 @@ td {
     position: absolute;
     left: 510px;
     top: 247px;
+    box-shadow: 5px 5px 5px gray;
     /* padding-top: 0px; */
 }
 
