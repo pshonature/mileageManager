@@ -178,7 +178,7 @@ function touchButton() {
     } else {
         precheckCurrentPhone();
         onoffFade(".save", "on");
-        onoff(".btnNumber", "off");
+        onoffFade(".btnNumber", "off");
     }
     onoff("#start010", "off");
 }
@@ -295,14 +295,29 @@ function touchSave() {
     onoff(".amount, .btnNumber, .btnDelete, .btnClear", "off");
     $("#amount").val("저장되었습니다.");
 
+    sweepInputTarget(phoneNumber);
     setTimeout(afterSaving, 3000);
+}
+
+function sweepInputTarget(target) {
+    let killLast = function() {
+        target.value = target.value.slice(1);
+    }
+    let length = target.value.length;
+    let interval = 2500 / length;
+    for (i = 1; i <= length; i++)
+        setTimeout(killLast, interval * i);
 }
 
 function touchCancel() {
     putMessage("적립을 취소하였습니다.");
+    sweepInputTarget(inputAmount);
+    sweepInputTarget(phoneNumber);
     onoff(".cancel", "off");
-    $(phoneNumber).val("");
+    // $(phoneNumber).val("");
     onoff(".save, .cancel, .btnNumber, .btnDelete, .btnClear", "off");
+    $("#mileageLog").slideUp(2500);
+    $("#mlogzone").slideUp(2500);
 
     mlgLogClear();
 
@@ -320,7 +335,7 @@ function putMessage(msg) {
 }
 
 function clearMessage() {
-    sysMessage.innerHTML = " ";
+    sysMessage.innerHTML = "";
 }
 
 function initMBOOK() {
