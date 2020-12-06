@@ -103,7 +103,7 @@ function findOrNewMBook(phone) {
     let mb = searchMBook(phone);
     if (mb == null) {
         mb = new MBook(phone);
-        MBOOK.mb.push(mb);
+        MBOOK.mb.unshift(mb);
     }
     return mb;
 }
@@ -192,6 +192,10 @@ function touchStart010() {
 
 function touchDelete() {
     mlgLogClear();
+    $("#mileageLog").slideUp();
+    putMessage(msgLib.numberPlease);
+    $("#mileageLog").html("");
+    onoff(".btnNumber", "on");
     onoff(".save", "off");
     let length = phoneNumber.value.length;
     switch (length) {
