@@ -221,6 +221,7 @@ function mlgLogClear() {
 
 function touchClear() {
     mlgLogClear();
+    onoff(".btnNumber", "on");
     onoff(".save, #start010", "off");
     phoneNumber.value = "010-";
     putMessage(msgLib.numberPlease);
