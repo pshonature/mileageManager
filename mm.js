@@ -2,7 +2,14 @@ let phoneNumber = null;
 let inputAmount = null;
 let sysMessage = null;
 
-//=======================================
+let msgLib = {
+        greetings: "적립할 금액 확인 =>",
+        checkFirst: "적립할 금액을 먼저 확인[V] 해주세요.",
+        numberPlease: "적립할 휴대폰 번호를 입력해 주세요.",
+        confirmDelete: "지금까지 저장된 마일리지 정보를 완전히 삭제할까요?",
+        thanksBeMyVIP: "첫 거래 감사합니다. 단골 고객이 되어주세요 ^^."
+    }
+    //=======================================
 let MBOOK = { mb: [] };
 //=======================================
 function Mileage(amount) {
@@ -48,6 +55,12 @@ function mBookAddMileage(mb, aMileage) {
 }
 //---------------------------------------
 
+//=======================================
+function showPhoneBook() {
+    if ($("#amount").val() != msgLib.greetings)
+        return;
+    $("#phoneZone").slideToggle();
+}
 //=======================================
 function getMileage() {
     let am = new Mileage(inputAmount.value.replace(/,/g, ""));
@@ -102,7 +115,7 @@ function precheckCurrentPhone(checkTop = false) {
         $("#mileageLog").html(mileageTokenList(mb.mBook, checkTop));
         $("#mileageLog").slideDown();
     } else {
-        putMessage("첫 거래 감사합니다. 단골 고객이 되어주세요 ^^.");
+        putMessage(msgLib.thanksBeMyVIP);
         mlgLogClear();
     }
 }
@@ -131,7 +144,7 @@ function touchButton() {
     if (phoneNumber.value.length < 13) {
         onoff(".save", "off");
         onoff(".btnNumber", "on");
-        putMessage("적립할 휴대폰 번호를 입력해 주세요");
+        putMessage(msgLib.numberPlease);
     } else {
         precheckCurrentPhone();
         onoffFade(".save", "on");
@@ -150,7 +163,7 @@ function touchStart010() {
 function touchDelete() {
     mlgLogClear();
     $("#mileageLog").slideUp();
-    putMessage("적립할 휴대폰 번호를 입력해 주세요");
+    putMessage(msgLib.numberPlease);
     $("#mileageLog").html("");
     onoff(".btnNumber", "on");
     onoff(".save", "off");
@@ -182,7 +195,7 @@ function touchClear() {
     onoff(".btnNumber", "on");
     onoff(".save, #start010", "off");
     phoneNumber.value = "010-";
-    putMessage("적립할 휴대폰 번호를 입력해 주세요.");
+    putMessage(msgLib.numberPlease);
 }
 
 function onoffBakup(target, value) {
@@ -219,7 +232,7 @@ function touchCheck() {
     inputAmount.value = toCommaNumber(nm);
     onoff(".btnNumber, .btnDelete, .btnClear, .cancel", "on");
     onoff(".amount, .save, #start010", "off");
-    putMessage("적립할 휴대폰 번호를 입력해 주세요.");
+    putMessage(msgLib.numberPlease);
     // $(".btnClear").click();
     phoneNumber.value = "010-";
     $("#mlogzone").slideDown();
@@ -230,8 +243,8 @@ function touchInput() {
 }
 
 function afterSaving() {
-    $("#amount").val("적립할 금액 확인 =>");
-    putMessage("적립할 금액을 먼저 확인[V] 해주세요.");
+    $("#amount").val(msgLib.greetings);
+    putMessage(msgLib.checkFirst);
     onoff(".amount", "on");
     onoff(".btnNumber, .btnDelete, .btnClear", "off");
     onoffFade(".save, .cancel", "off");
@@ -269,8 +282,8 @@ function touchCancel() {
 
     setTimeout(function() {
         afterSaving();
-        $("#amount").val("적립할 금액 확인 =>");
-        putMessage("적립할 금액을 먼저 확인[V] 해주세요.");
+        $("#amount").val(msgLib.greetings);
+        putMessage(msgLib.checkFirst);
         phoneNumber.value = "010-";
         onoff(".amount", "on");
     }, 3000);
@@ -300,7 +313,7 @@ function refreshMBOOK() {
 }
 
 function initMBOOKByFooterClick() {
-    let ans = confirm("지금까지 저장된 마일리지 정보를 완전히 삭제할까요?");
+    let ans = confirm(msgLib.confirmDelete);
     if (ans) {
         initMBOOK();
         location.reload();
@@ -342,15 +355,17 @@ window.onload = function() {
     $(".save").click(touchSave);
     $(".cancel").click(touchCancel);
     $(".footer").click(initMBOOKByFooterClick);
+    $("h1").click(showPhoneBook);
 
     $("#start010").click();
 
     onoff(".save, .cancel, .btnNumber, .btnDelete, .btnClear", "off");
-    putMessage("적립할 금액을 먼저 확인[V] 해주세요.");
-    $("#amount").val("적립할 금액 확인 =>");
+    putMessage(msgLib.checkFirst);
+    $("#amount").val(msgLib.greetings);
     mlgLogClear();
     $("#mileageLog").hide();
     $("#mlogzone").hide();
+    $("#phoneZone").hide();
 
 };
 window.onunload = saveMBOOK;
