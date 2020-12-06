@@ -254,8 +254,11 @@ function onoffFade(target, value) {
 
 function touchCheck() {
     clearMessage();
-    let nm = Math.random() * 100;
-    nm = Math.floor(nm) * 1000;
+    let nm = 0;
+    do {
+        nm = Math.random() * 100;
+        nm = Math.floor(nm) * 1000;
+    } while (nm <= 0);
     //https://mizzo-dev.tistory.com/65 (1000단위 콤마 삽입)
     inputAmount.value = toCommaNumber(nm);
     onoff(".btnNumber, .btnDelete, .btnClear, .cancel", "on");
@@ -279,8 +282,6 @@ function afterSaving() {
     onoffFade(".save, .cancel", "off");
     phoneNumber.value = "";
     mlgLogClear();
-    $("#mileageLog").slideUp();
-    $("#mlogzone").slideUp();
 }
 
 function touchSave() {
@@ -295,6 +296,8 @@ function touchSave() {
     onoff(".amount, .btnNumber, .btnDelete, .btnClear", "off");
 
 
+    $("#mileageLog").slideUp(2500);
+    $("#mlogzone").slideUp(2500);
     sweepInputTarget(phoneNumber);
     sweepInputTarget(inputAmount);
     setTimeout(function() { $("#amount").val("저장되었습니다."); }, 2500);
