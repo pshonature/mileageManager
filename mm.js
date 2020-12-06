@@ -293,9 +293,11 @@ function touchSave() {
     // $(".btnClear").click();
     onoffFade(".save, .cancel", "off");
     onoff(".amount, .btnNumber, .btnDelete, .btnClear", "off");
-    $("#amount").val("저장되었습니다.");
+
 
     sweepInputTarget(phoneNumber);
+    sweepInputTarget(inputAmount);
+    setTimeout(function() { $("#amount").val("저장되었습니다."); }, 2500);
     setTimeout(afterSaving, 3000);
 }
 
