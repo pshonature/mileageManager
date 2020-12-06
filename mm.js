@@ -42,7 +42,26 @@ function mileageTokenList(mlist, checkTop = false) {
     let topClass = (checkTop) ? "background-color: lightpink;" : "";
     for (let m of mlist) {
         list += `<div style='${topClass} padding-top: 3px; border-bottom: 1px dotted gray;'>`;
-        list += `<div class="mlgNumber">${count++}:</div> ` + mileageToken(m, "div") + "<br>";
+        list += `<div class="mlgNumber">${count++}</div> ` + mileageToken(m, "div") + "<br>";
+        list += "</div>";
+        topClass = "";
+    }
+    return list;
+}
+
+function phoneToken(mb, tag) {
+    let token = `<${tag} class="mlgAmount">${toCommaNumber(mb.mTotal)}</${tag}> `;
+    token += `<${tag} class="mlgDate">${mb.phone} (${mb.mBook.length})</${tag}> `;
+    return token;
+}
+
+function phoneTokenList(checkTop = false) {
+    let list = "";
+    let count = 1;
+    let topClass = (checkTop) ? "background-color: lightpink;" : "";
+    for (let mb of MBOOK.mb) {
+        list += `<div style='${topClass} padding-top: 3px; border-bottom: 1px dotted gray;'>`;
+        list += `<div class="mlgNumber">${count++}</div> ` + phoneToken(mb, "div") + "<br>";
         list += "</div>";
         topClass = "";
     }
@@ -54,12 +73,23 @@ function mBookAddMileage(mb, aMileage) {
     mb.mTotal += aMileage.amount;
 }
 //---------------------------------------
-
+function totalMBOOK() {
+    let sum = 0;
+    for (let mb of MBOOK.mb) {
+        sum += mb.mTotal;
+    }
+    return sum;
+}
 //=======================================
 function showPhoneBook() {
     if ($("#amount").val() != msgLib.greetings)
         return;
-    $("#phoneZone").slideToggle();
+    let mb = MBOOK.mb;
+
+    $("#phoneCount").html(mb.length);
+    $("#phoneTotal").html(toCommaNumber(totalMBOOK()));
+    $("#phoneLog").html(phoneTokenList());
+    $("#phoneZone").slideDown();
 }
 //=======================================
 function getMileage() {
@@ -162,10 +192,6 @@ function touchStart010() {
 
 function touchDelete() {
     mlgLogClear();
-    $("#mileageLog").slideUp();
-    putMessage(msgLib.numberPlease);
-    $("#mileageLog").html("");
-    onoff(".btnNumber", "on");
     onoff(".save", "off");
     let length = phoneNumber.value.length;
     switch (length) {
@@ -191,8 +217,6 @@ function mlgLogClear() {
 
 function touchClear() {
     mlgLogClear();
-    $("#mileageLog").slideUp();
-    onoff(".btnNumber", "on");
     onoff(".save, #start010", "off");
     phoneNumber.value = "010-";
     putMessage(msgLib.numberPlease);
@@ -236,6 +260,7 @@ function touchCheck() {
     // $(".btnClear").click();
     phoneNumber.value = "010-";
     $("#mlogzone").slideDown();
+    $("#phoneZone").hide();
 }
 
 function touchInput() {
@@ -252,7 +277,6 @@ function afterSaving() {
     mlgLogClear();
     $("#mileageLog").slideUp();
     $("#mlogzone").slideUp();
-
 }
 
 function touchSave() {
@@ -277,8 +301,6 @@ function touchCancel() {
     onoff(".save, .cancel, .btnNumber, .btnDelete, .btnClear", "off");
 
     mlgLogClear();
-    $("#mileageLog").slideUp();
-    $("#mlogzone").slideUp();
 
     setTimeout(function() {
         afterSaving();
@@ -356,6 +378,7 @@ window.onload = function() {
     $(".cancel").click(touchCancel);
     $(".footer").click(initMBOOKByFooterClick);
     $("h1").click(showPhoneBook);
+    $("#phoneZone").click(function() { $(this).slideUp(); });
 
     $("#start010").click();
 
@@ -363,7 +386,6 @@ window.onload = function() {
     putMessage(msgLib.checkFirst);
     $("#amount").val(msgLib.greetings);
     mlgLogClear();
-    $("#mileageLog").hide();
     $("#mlogzone").hide();
     $("#phoneZone").hide();
 
