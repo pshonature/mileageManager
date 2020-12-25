@@ -107,7 +107,12 @@ function findOrNewMBook(phone) {
     }
     return mb;
 }
-
+//-------------------------------------------------------------
+// searchMBook(phone)
+//  -phone: 휴대폰 번호
+// MBOOK에서 phone과 일치하는 MBook을 검색한다.
+// 반환값: 검색된 MBoook 또는 null
+//-------------------------------------------------------------
 function searchMBook(phone) {
     for (let amb of MBOOK.mb) {
         if (amb.phone === phone)
@@ -115,15 +120,28 @@ function searchMBook(phone) {
     }
     return null;
 }
-//=========================================
+//-------------------------------------------------------------
+// toCommaNumber(n)
+//  -n: number 또는 string number
+// 반환값: 1000단위마다 ','를 추가한 문자열 
+// https://mizzo-dev.tistory.com/65 (1000단위 콤마 삽입)
+//   => regular expression으로 변환하는 내용 참조
+//-------------------------------------------------------------
 function toCommaNumber(n) {
     return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
+//-------------------------------------------------------------
+// putZero(number, digitSize=2)
+//  -number: a number to go
+//  -digitSize: 완성할 문자열 길이 (default: 2)
+// 반환값: number 앞에 0이 채워진 digiitSize 길이의 문자열
+//  ~> number의 길이가 digitSize보다 크면 number 길이의 문자열 반환
+//-------------------------------------------------------------
 function putZero(number, digitSize = 2) {
-    let ns = number.toString();
-    if (ns.length < digitSize)
-        while (ns.length < digitSize)
+    let ns = number.toString(); //일단, number를 문자열로 변환
+    if (ns.length < digitSize) //digitSize보다 길이가 작으면
+        while (ns.length < digitSize) //digitSize 크기가 되도록 앞에 0을 추가
             ns = "0" + ns;
     return ns;
 }
@@ -260,7 +278,6 @@ function touchCheck() {
         nm = Math.random() * 100;
         nm = Math.floor(nm) * 1000;
     } while (nm <= 0);
-    //https://mizzo-dev.tistory.com/65 (1000단위 콤마 삽입)
     inputAmount.value = toCommaNumber(nm);
     onoff(".btnNumber, .btnDelete, .btnClear, .cancel", "on");
     onoff(".amount, .save, #start010", "off");
