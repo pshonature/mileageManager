@@ -1,22 +1,37 @@
+/*
+    Project: Mileage Manager
+    for: 2020-2학기 웹개발기초II 기말과제 주제
+    동의과학대학교 컴퓨터정보과
+*/
+
+// Global Variables, HTML 객체 접근용, window.onload에서 연결 초기화
 let phoneNumber = null;
 let inputAmount = null;
 let sysMessage = null;
-
-let msgLib = {
-        greetings: "적립할 금액 확인 =>",
-        checkFirst: "적립할 금액을 먼저 확인[V] 해주세요.",
-        numberPlease: "적립할 휴대폰 번호를 입력해 주세요.",
-        confirmDelete: "지금까지 저장된 마일리지 정보를 완전히 삭제할까요?",
-        thanksBeMyVIP: "첫 거래 감사합니다. 단골 고객이 되어주세요 ^^."
-    }
-    //=======================================
+//=======================================
+// Mileage 정보를 모두 모아두기 위한 객체, localStorage에는 이 객체만 저장함.
 let MBOOK = { mb: [] };
 //=======================================
+
+// 출력할 메시지들을 모아서 관리하기 위한 객체
+let msgLib = {
+    greetings: "적립할 금액 확인 =>",
+    checkFirst: "적립할 금액을 먼저 확인[V] 해주세요.",
+    numberPlease: "적립할 휴대폰 번호를 입력해 주세요.",
+    confirmDelete: "지금까지 저장된 마일리지 정보를 완전히 삭제할까요?",
+    thanksBeMyVIP: "첫 거래 감사합니다. 단골 고객이 되어주세요 ^^."
+}
+
+// 단위 마일리지 정보 객체 생성자 함수
+// amount: 구입 금액
+// date:  구입 시간
 function Mileage(amount) {
     this.amount = parseInt(amount);
     this.date = new Date();
 }
 //---------------------------------------
+// 휴대폰 번호별 마일리지 정보 관리를 위한 객체 생성자 함수
+// 폰번호, 마일리지 정보 저장할 배열, 합계금액(매번 합계 계산을 피하기 위한 속성)
 function MBook(phone) {
     this.phone = phone;
     this.mBook = []; // for storing Mileages
@@ -135,17 +150,22 @@ function toCommaNumber(n) {
 // putZero(number, digitSize=2)
 //  -number: a number to go
 //  -digitSize: 완성할 문자열 길이 (default: 2)
-// 반환값: number 앞에 0이 채워진 digiitSize 길이의 문자열
+// 반환값: number 앞에 0이 채워진 digitSize 길이의 문자열
 //  ~> number의 길이가 digitSize보다 크면 number 길이의 문자열 반환
 //-------------------------------------------------------------
 function putZero(number, digitSize = 2) {
     let ns = number.toString(); //일단, number를 문자열로 변환
     if (ns.length < digitSize) //digitSize보다 길이가 작으면
-        while (ns.length < digitSize) //digitSize 크기가 되도록 앞에 0을 추가
-            ns = "0" + ns;
+        while (ns.length < digitSize) //digitSize 크기가 되도록 
+            ns = "0" + ns; //앞에 0을 추가
     return ns;
 }
 
+//-------------------------------------------------------------
+// toMyDateForm(date) : 
+//  -date: date 객체
+// 반환값: "YYYY-MM-DD HH:MM" 형식으로 날짜 값 반환
+//-------------------------------------------------------------
 function toMyDateForm(date) {
     let dstr = date.getFullYear() + "-" + putZero(date.getMonth() + 1) + "-";
     dstr += putZero(date.getDate()) + " ";
@@ -155,10 +175,10 @@ function toMyDateForm(date) {
 }
 
 function precheckCurrentPhone(checkTop = false) {
-    let mb = searchMBook(phoneNumber.value);
-    if (mb) { //적립 이력이 있는 번호
-        putMessage(mBookReport(mb));
-        $("#mLogCount").html(mb.mBook.length);
+    let mb = searchMBook(phoneNumber.value); //입력된 폰번호를 MBOOK에서 검색
+    if (mb) { //적립 이력이 있는 번호가 발견되었으면
+        putMessage(mBookReport(mb)); //해당 번호의 기본 적립 현황을 먼저 메시지로 출력
+        $("#mLogCount").html(mb.mBook.length); //적립 세부 정보를 차례로 출력
         $("#mLogTotal").html(toCommaNumber(mb.mTotal));
         $("#mileageLog").html(mileageTokenList(mb.mBook, checkTop));
         $("#mileageLog").slideDown();
@@ -167,7 +187,8 @@ function precheckCurrentPhone(checkTop = false) {
         mlgLogClear();
     }
 }
-
+//---v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v
+// 버튼 누름 효과 표현을 위한 클래스 추가/삭제 이벤트 핸들러
 function btnNumberDown() {
     $(this).addClass("btnNumberDown")
 }
@@ -175,60 +196,75 @@ function btnNumberDown() {
 function btnNumberUp() {
     $(this).removeClass("btnNumberDown")
 }
+//---^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^
 
+//-------------------------------------------------------------
+// touchButton() 
+// 숫자 버튼(0-9) 이벤트 핸들러
+//-------------------------------------------------------------
 function touchButton() {
-    this.blur();
-    if (phoneNumber.value.length >= 13) {
-        // onoff(".save", "on");
-        return;
+    this.blur(); //버튼 클릭하였을 때, 표시되는 선택 효과(테두리 강조 표시) 무효 처리
+    if (phoneNumber.value.length >= 13) { //이미 폰번호 입력이 완성(13자리 입력) 되었으면
+        return; //더 이상 다른 처리를 하지 않고 리턴 (무반응 처리)
     }
-    phoneNumber.value += this.value;
-    switch (phoneNumber.value.length) {
+    phoneNumber.value += this.value; //현재까지 입력된 값에 클릭한 버튼의 값 추가
+    switch (phoneNumber.value.length) { //버튼 값 추가한 뒤에 후처리
         case 3:
         case 8:
-            phoneNumber.value += "-";
+            phoneNumber.value += "-"; //3자리, 8자리 입력된 직후라면 '-' 추가
             break;
     }
-    if (phoneNumber.value.length < 13) {
-        onoff(".save", "off");
-        onoff(".btnNumber", "on");
-        putMessage(msgLib.numberPlease);
-    } else {
-        precheckCurrentPhone();
-        onoffFade(".save", "on");
-        onoffFade(".btnNumber", "off");
+    if (phoneNumber.value.length < 13) { //폰번호 입력 완료 이전이면
+        onoff(".save", "off"); //[저장] 버튼 감추기
+        onoff(".btnNumber", "on"); //숫자 버튼을 계속 표시하기
+        putMessage(msgLib.numberPlease); //폰번호 입력 요청 메시지 출력
+    } else { //폰번호 입력 완료 되었으면
+        precheckCurrentPhone(); //입력된 번호를 MBOOK에서 검색한 결과 출력
+        onoffFade(".save", "on"); //[저장] 버튼 표시하기
+        onoff(".btnNumber", "off"); //숫자 버튼 감추기
     }
-    onoff("#start010", "off");
+    onoff("#start010", "off"); //숫자 버튼을 클릭한 상황이면 이미 [010]버튼은 필요 없으므로 감춘다.
 }
-
+//-------------------------------------------------------------
+// touchStart010() 
+// [010] 버튼 이벤트 핸들러
+//-------------------------------------------------------------
 function touchStart010() {
-    if (phoneNumber.value.length <= 0) {
-        phoneNumber.value = this.value + "-";
-        this.disabled = true;
+    if (phoneNumber.value.length <= 0) { //폰번호 입력란이 완전히 비어 있으면
+        phoneNumber.value = this.value + "-"; // "010-" 문자열을 입력하고
+        // this.disabled = true; //[010] 버튼 동작 중지 처리.
+        onoff("#start010", "off");
     }
 }
 
+//-------------------------------------------------------------
+// touchDelete() 
+// [BACK] 버튼 이벤트 핸들러
+//-------------------------------------------------------------
 function touchDelete() {
-    mlgLogClear();
-    $("#mileageLog").slideUp();
-    putMessage(msgLib.numberPlease);
-    $("#mileageLog").html("");
-    onoff(".btnNumber", "on");
-    onoff(".save", "off");
     let length = phoneNumber.value.length;
-    switch (length) {
-        case 0:
-            return;
-        case 9:
+    if (length <= 0)
+        return;
+    switch (length) { //폰번호 구분 문자 '-' 연동 삭제 처리
         case 4:
+        case 9:
             phoneNumber.value = phoneNumber.value.slice(0, length - 1);
+            break;
+        case 13:
+            mlgLogClear(); //폰번호를 1개라도 지웠으면 폰번호 미완성이므로 폰관련 마일리지 기록은 무조건 삭제
+            $("#mileageLog").slideUp(); //마일리지 정보 영역 닫기
+            putMessage(msgLib.numberPlease); //폰번호 입력 요청 메시지 출력
+            $("#mileageLog").html(""); //마일리지 정보 출력(되었을 수 있는) 영역 삭제
+            onoff(".btnNumber", "on"); //숫자 버튼 표시 (폰번호 입력을 계속 할 수 있도록)
+            onoff(".save", "off"); //[저장] 버튼 감추기 (폰번호 미완성 상태이므로)
             break;
     }
     phoneNumber.value = phoneNumber.value.slice(0, phoneNumber.value.length - 1);
-    if (phoneNumber.value.length > 0)
-        onoff("#start010", "off");
-    else
+    //폰번호 삭제 처리 후, 폰번호 입력 영역에 남은 내용이 없으면 [010] 표시, 아니면 삭제.
+    if (phoneNumber.value.length <= 0)
         onoff("#start010", "on");
+    else
+        onoff("#start010", "off");
 }
 
 function mlgLogClear() {
@@ -245,7 +281,7 @@ function touchClear() {
     putMessage(msgLib.numberPlease);
 }
 
-function onoffBakup(target, value) {
+function onoffBackup(target, value) {
     value = value.toUpperCase();
     value = (value == "ON") ? false : true;
     $(target).attr("disabled", value);
