@@ -38,6 +38,8 @@ function MBook(phone) {
     this.mTotal = 0; // Total mileage amount
 }
 
+// 마일리지 북(mb) 상황 보고 메시지 문자열 생성하여 반환
+// 형식: "Phone:[010-nnn-nnnn] 적립 횟수:[n]회 적립총액:[nn,nnnn,nnn]"
 function mBookReport(mb) {
     let msg = `Phone:[${mb.phone}] `;
     msg += `적립 횟수:[${mb.mBook.length}]회 `;
@@ -45,31 +47,44 @@ function mBookReport(mb) {
     return msg;
 }
 
+// 마일리지 정보(m) 1회분에 대한 html형식의 보고서 생성
+// 보고서 생성에 사용할 html tag를 두 번째 매개변수로 받음 (예: div, span, ...)
+// 금액과 구입날짜에 태그는 동일한 종류를 사용하며, 클래스는 미리 정해져 있다. (mlgAmount, mlgDate)
 function mileageToken(m, tag) {
     let token = `<${tag} class="mlgAmount">${toCommaNumber(m.amount)}</${tag}> `;
     token += `<${tag} class="mlgDate">${toMyDateForm(m.date)}</${tag}> `;
     return token;
 }
 
+// mileageToken(m, tag)가 반환하는 결과들을 <div>~</div>으로 묶어서 반환
+// -mlist: 폰 번호별 마일리지 북의 속성 mBook
+// -checkTop: 최근 마일리지를 강조하여 표시할 지를 결정 (default: false), 마일리지 저장 직후에 true
+// Called from precheckCurrentPhone()
 function mileageTokenList(mlist, checkTop = false) {
     let list = "";
     let count = 1;
+    //checkTop이 true이면 최근 마일리지를 lightpink로 강조, 아니면 강조 생략
     let topClass = (checkTop) ? "background-color: lightpink;" : "";
     for (let m of mlist) {
         list += `<div style='${topClass} padding-top: 3px; border-bottom: 1px dotted gray;'>`;
         list += `<div class="mlgNumber">${count++}</div> ` + mileageToken(m, "div") + "<br>";
         list += "</div>";
-        topClass = "";
+        topClass = ""; //lightpink 강조로 설정되었을 수도 있는 변수를 clear. (최초 1회만 적용토록)
     }
     return list;
 }
 
+// 폰 번호 목록 작성을 위한 폰 번호별 기본 정보(합계, 폰번호, 적립 횟수)를 html로 작성하여 반환하는 함수
+// 기본정보 작성에 사용할 태그(tag)를 매개변수로 받음
+// (합계)와 (폰번호, 적립횟)에 적용할 css class는 마일리지 토큰 생성함수에서 사용하는 것과 동일하게 사용
 function phoneToken(mb, tag) {
     let token = `<${tag} class="mlgAmount">${toCommaNumber(mb.mTotal)}</${tag}> `;
     token += `<${tag} class="mlgDate">${mb.phone} (${mb.mBook.length})</${tag}> `;
     return token;
 }
 
+// 마일리지 적립 중인 전체 폰번호 목록을 완성하는 함수 
+// => 번호별 세부 정보는 위의 phoneToken(b, tag)를 호출하여 완성
 function phoneTokenList(checkTop = false) {
     let list = "";
     let count = 1;
@@ -83,15 +98,17 @@ function phoneTokenList(checkTop = false) {
     return list;
 }
 
+// 선택된 폰의 마일리지 북(mb)에 마일리지(aMileage) 정보 추가
 function mBookAddMileage(mb, aMileage) {
-    mb.mBook.unshift(aMileage);
-    mb.mTotal += aMileage.amount;
+    mb.mBook.unshift(aMileage); // 신규 마일리지는 배열의 앞에 추가         
+    mb.mTotal += aMileage.amount; // 폰의 마일리지 총액 갱신
 }
 //---------------------------------------
+// 모든 폰의 마일리지 총합계 계산하여 반환
 function totalMBOOK() {
     let sum = 0;
-    for (let mb of MBOOK.mb) {
-        sum += mb.mTotal;
+    for (let mb of MBOOK.mb) { // MBOOK에서 폰 하나의 정보(mb)를 가져와서
+        sum += mb.mTotal; // 폰의 합계 정보(mTotal)를 합산한다. 
     }
     return sum;
 }
@@ -273,19 +290,22 @@ function mlgLogClear() {
     $("#mLogTotal").html("-");
 }
 
+// 버튼 [C] click 이벤트 핸들러
 function touchClear() {
-    mlgLogClear();
-    onoff(".btnNumber", "on");
-    onoff(".save, #start010", "off");
-    phoneNumber.value = "010-";
-    putMessage(msgLib.numberPlease);
+    mlgLogClear(); //폰번호 마일리지 표시영역 삭제
+    onoff(".btnNumber", "on"); //폰번 입력 숫자 버튼 표시하기
+    onoff(".save, #start010", "off"); // [저장], [010] 버튼 감추기
+    phoneNumber.value = "010-"; // 폰번호 기본 시작값 "010-" 설정
+    putMessage(msgLib.numberPlease); //폰번호 입력 요청 메시지 출력
 }
 
+//백업용 함수, 사용하지는 않음
 function onoffBackup(target, value) {
     value = value.toUpperCase();
     value = (value == "ON") ? false : true;
     $(target).attr("disabled", value);
 }
+
 
 function onoff(target, value) {
     value = value.toUpperCase();
@@ -315,7 +335,7 @@ function touchCheck() {
         nm = Math.floor(nm) * 1000;
     } while (nm <= 0);
     inputAmount.value = toCommaNumber(nm);
-    onoff(".btnNumber, .btnDelete, .btnClear, .cancel", "on");
+    onoffFade(".btnNumber, .btnDelete, .btnClear, .cancel", "on");
     onoff(".amount, .save, #start010", "off");
     putMessage(msgLib.numberPlease);
     // $(".btnClear").click();
